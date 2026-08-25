@@ -1,0 +1,27 @@
+{
+  "name": "Dube Home Records Studio Suite",
+  "short_name": "DHR Studio",
+  "description": "Professional beat-making, recording, mixing and mastering studio — by CEO Simon Dube",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0a0f",
+  "theme_color": "#00A8FF",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "/manus-storage/icon-192_c5215ed9.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/manus-storage/icon-512_fdcc129a.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["music", "entertainment", "productivity"],
+  "screenshots": [],
+  "lang": "en"
+}

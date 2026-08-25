@@ -1,0 +1,1377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+  <title>DHR Master v2.0 — AKG Mastering Edition</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --blue: #00A8FF;
+      --blue-bright: #00D4FF;
+      --blue-dim: #005580;
+      --gold: #D4AF37;
+      --bg: #000000;
+      --surface: #0d0d0d;
+      --surface2: #141414;
+      --surface3: #1a1a1a;
+      --border: rgba(0,168,255,0.18);
+      --text: #E0E0E0;
+      --text-dim: #888;
+      --red: #FF3B3B;
+      --green: #00FF88;
+    }
+
+    html, body {
+      height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Rajdhani', sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* ── HEADER ── */
+    header {
+      background: linear-gradient(180deg, #111 0%, #0d0d0d 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 2px 24px rgba(0,0,0,0.9);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .logo-mark {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, #00A8FF 0%, #0060AA 100%);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 15px;
+      color: #fff;
+      letter-spacing: 0.05em;
+      box-shadow: 0 0 14px rgba(0,168,255,0.4);
+      flex-shrink: 0;
+    }
+
+    .logo-text {
+      flex: 1;
+    }
+
+    .logo-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(16px, 4vw, 24px);
+      color: var(--blue);
+      letter-spacing: 0.1em;
+      line-height: 1;
+      text-shadow: 0 0 14px rgba(0,168,255,0.5);
+    }
+
+    .logo-sub {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      color: var(--blue-dim);
+      letter-spacing: 0.14em;
+      margin-top: 2px;
+    }
+
+    .header-badge {
+      background: rgba(0,168,255,0.1);
+      border: 1px solid rgba(0,168,255,0.3);
+      border-radius: 6px;
+      padding: 4px 10px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      color: var(--blue);
+      letter-spacing: 0.1em;
+      flex-shrink: 0;
+    }
+
+    /* ── MAIN ── */
+    main {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 20px 16px 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    /* ── CARDS ── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.5);
+    }
+
+    .card-title {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      color: var(--blue-dim);
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    /* ── UPLOAD ZONE ── */
+    .upload-zone {
+      border: 2px dashed rgba(0,168,255,0.3);
+      border-radius: 10px;
+      padding: 32px 16px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 200ms ease;
+      background: rgba(0,168,255,0.03);
+      position: relative;
+    }
+
+    .upload-zone:hover, .upload-zone.drag-over {
+      border-color: var(--blue);
+      background: rgba(0,168,255,0.07);
+      box-shadow: 0 0 20px rgba(0,168,255,0.12);
+    }
+
+    .upload-zone input[type="file"] {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+      width: 100%;
+      height: 100%;
+    }
+
+    .upload-icon {
+      font-size: 36px;
+      margin-bottom: 10px;
+      display: block;
+    }
+
+    .upload-label {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--blue);
+      letter-spacing: 0.08em;
+      display: block;
+    }
+
+    .upload-hint {
+      font-size: 12px;
+      color: var(--text-dim);
+      margin-top: 4px;
+      letter-spacing: 0.06em;
+    }
+
+    /* ── FILE INFO BAR ── */
+    .file-info {
+      display: none;
+      align-items: center;
+      gap: 10px;
+      background: var(--surface2);
+      border: 1px solid rgba(0,168,255,0.2);
+      border-radius: 8px;
+      padding: 10px 14px;
+    }
+
+    .file-info.visible { display: flex; }
+
+    .file-icon { font-size: 20px; flex-shrink: 0; }
+
+    .file-details { flex: 1; min-width: 0; }
+
+    .file-name {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .file-meta {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      color: var(--text-dim);
+      margin-top: 2px;
+    }
+
+    .file-clear {
+      background: none;
+      border: none;
+      color: var(--text-dim);
+      font-size: 18px;
+      cursor: pointer;
+      padding: 4px;
+      flex-shrink: 0;
+      transition: color 150ms;
+    }
+
+    .file-clear:hover { color: var(--red); }
+
+    /* ── WAVEFORM ── */
+    .waveform-wrap {
+      position: relative;
+      background: var(--surface2);
+      border: 1px solid rgba(0,168,255,0.12);
+      border-radius: 8px;
+      overflow: hidden;
+      height: 100px;
+    }
+
+    #waveformCanvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .waveform-placeholder {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      color: var(--text-dim);
+      letter-spacing: 0.1em;
+    }
+
+    /* ── PLAYBACK ── */
+    .playback-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .btn-play {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 2px solid var(--blue);
+      background: rgba(0,168,255,0.1);
+      color: var(--blue);
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 150ms;
+      flex-shrink: 0;
+    }
+
+    .btn-play:hover {
+      background: rgba(0,168,255,0.2);
+      box-shadow: 0 0 12px rgba(0,168,255,0.3);
+    }
+
+    .btn-play:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+
+    .time-display {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: var(--blue);
+      letter-spacing: 0.08em;
+      flex-shrink: 0;
+    }
+
+    .progress-bar-wrap {
+      flex: 1;
+      height: 4px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 2px;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      background: var(--blue);
+      border-radius: 2px;
+      width: 0%;
+      transition: width 0.1s linear;
+    }
+
+    /* ── MASTERING CONTROLS ── */
+    .controls-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    @media (max-width: 480px) {
+      .controls-grid { grid-template-columns: 1fr; }
+    }
+
+    .control-group {
+      background: var(--surface2);
+      border: 1px solid rgba(0,168,255,0.1);
+      border-radius: 8px;
+      padding: 12px;
+    }
+
+    .control-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      color: var(--blue-dim);
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .control-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--blue);
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    input[type="range"] {
+      -webkit-appearance: none;
+      width: 100%;
+      height: 4px;
+      background: rgba(0,168,255,0.15);
+      border-radius: 2px;
+      outline: none;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: var(--blue);
+      cursor: pointer;
+      box-shadow: 0 0 8px rgba(0,168,255,0.5);
+    }
+
+    select {
+      width: 100%;
+      background: var(--surface3);
+      border: 1px solid rgba(0,168,255,0.2);
+      border-radius: 6px;
+      color: var(--text);
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 6px 10px;
+      outline: none;
+      cursor: pointer;
+    }
+
+    select:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 8px rgba(0,168,255,0.2);
+    }
+
+    /* ── CHAIN DISPLAY ── */
+    .chain-steps {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .chain-step {
+      background: var(--surface3);
+      border: 1px solid rgba(0,168,255,0.12);
+      border-radius: 6px;
+      padding: 6px 10px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      transition: all 200ms;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .chain-step .step-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #333;
+      flex-shrink: 0;
+    }
+
+    .chain-step.active {
+      border-color: var(--blue);
+      color: var(--blue);
+      box-shadow: 0 0 10px rgba(0,168,255,0.2);
+    }
+
+    .chain-step.active .step-dot {
+      background: var(--blue);
+      box-shadow: 0 0 6px rgba(0,168,255,0.8);
+    }
+
+    .chain-step.done {
+      border-color: var(--green);
+      color: var(--green);
+    }
+
+    .chain-step.done .step-dot {
+      background: var(--green);
+    }
+
+    /* ── MASTER BUTTON ── */
+    .master-btn-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      padding: 8px 0;
+    }
+
+    #masterBtn {
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      border: 3px solid var(--blue);
+      background: radial-gradient(circle at 40% 35%, rgba(0,168,255,0.18) 0%, rgba(0,0,0,0.8) 70%);
+      color: var(--blue);
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 28px;
+      letter-spacing: 0.12em;
+      cursor: pointer;
+      transition: all 200ms ease;
+      box-shadow: 0 0 24px rgba(0,168,255,0.2), inset 0 0 24px rgba(0,168,255,0.05);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    #masterBtn::before {
+      content: '';
+      position: absolute;
+      inset: 6px;
+      border-radius: 50%;
+      border: 1px solid rgba(0,168,255,0.15);
+    }
+
+    #masterBtn:hover:not(:disabled) {
+      box-shadow: 0 0 40px rgba(0,168,255,0.45), inset 0 0 30px rgba(0,168,255,0.1);
+      transform: scale(1.04);
+    }
+
+    #masterBtn:active:not(:disabled) {
+      transform: scale(0.97);
+    }
+
+    #masterBtn:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
+
+    #masterBtn.processing {
+      animation: master-pulse 1.2s ease-in-out infinite;
+      border-color: var(--blue-bright);
+    }
+
+    @keyframes master-pulse {
+      0%, 100% { box-shadow: 0 0 24px rgba(0,168,255,0.3), inset 0 0 24px rgba(0,168,255,0.05); transform: scale(1); }
+      50% { box-shadow: 0 0 50px rgba(0,212,255,0.6), inset 0 0 40px rgba(0,168,255,0.12); transform: scale(1.04); }
+    }
+
+    .master-btn-sub {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 8px;
+      color: var(--blue-dim);
+      letter-spacing: 0.12em;
+    }
+
+    .master-status {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--text-dim);
+      letter-spacing: 0.1em;
+      text-align: center;
+      min-height: 16px;
+    }
+
+    .master-status.active { color: var(--blue); }
+    .master-status.done { color: var(--green); }
+    .master-status.error { color: var(--red); }
+
+    /* ── METERS ── */
+    .meters-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .meter-box {
+      background: var(--surface2);
+      border: 1px solid rgba(0,168,255,0.1);
+      border-radius: 8px;
+      padding: 12px;
+    }
+
+    .meter-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .lufs-display {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 28px;
+      font-weight: 600;
+      color: var(--text-dim);
+      line-height: 1;
+    }
+
+    .lufs-display.measured { color: var(--blue); }
+    .lufs-display.good { color: var(--green); }
+
+    .lufs-unit {
+      font-size: 11px;
+      color: var(--text-dim);
+      margin-top: 2px;
+      letter-spacing: 0.1em;
+    }
+
+    .vu-bar-wrap {
+      height: 8px;
+      background: rgba(255,255,255,0.06);
+      border-radius: 4px;
+      overflow: hidden;
+      margin-top: 8px;
+    }
+
+    .vu-bar-fill {
+      height: 100%;
+      border-radius: 4px;
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
+    .vu-bar-fill.before { background: linear-gradient(90deg, #005580, #00A8FF); }
+    .vu-bar-fill.after { background: linear-gradient(90deg, #00A8FF, #00FF88); }
+
+    /* ── EXPORT ── */
+    .export-section {
+      display: none;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .export-section.visible { display: flex; }
+
+    .export-info {
+      background: rgba(0,255,136,0.05);
+      border: 1px solid rgba(0,255,136,0.2);
+      border-radius: 8px;
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .export-info-icon { font-size: 20px; flex-shrink: 0; }
+
+    .export-info-text { flex: 1; }
+
+    .export-info-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--green);
+      letter-spacing: 0.06em;
+    }
+
+    .export-info-sub {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      color: var(--text-dim);
+      margin-top: 2px;
+    }
+
+    #downloadBtn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      padding: 14px;
+      border-radius: 10px;
+      border: 2px solid var(--blue);
+      background: rgba(0,168,255,0.1);
+      color: var(--blue);
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 20px;
+      letter-spacing: 0.14em;
+      cursor: pointer;
+      transition: all 180ms ease;
+      box-shadow: 0 0 16px rgba(0,168,255,0.15);
+      text-decoration: none;
+    }
+
+    #downloadBtn:hover {
+      background: rgba(0,168,255,0.18);
+      box-shadow: 0 0 28px rgba(0,168,255,0.35);
+      transform: translateY(-1px);
+    }
+
+    /* ── WAVEFORM COMPARE ── */
+    .waveform-compare {
+      display: none;
+      gap: 8px;
+      flex-direction: column;
+    }
+
+    .waveform-compare.visible { display: flex; }
+
+    .waveform-compare-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      color: var(--text-dim);
+      text-transform: uppercase;
+    }
+
+    .waveform-compare-label span {
+      color: var(--blue);
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      text-align: center;
+      padding: 20px 16px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      color: #333;
+      letter-spacing: 0.1em;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 600px) {
+      .meters-row { grid-template-columns: 1fr 1fr; }
+      #masterBtn { width: 120px; height: 120px; font-size: 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="logo-mark">DHR</div>
+  <div class="logo-text">
+    <div class="logo-title">DHR MASTER v2.0</div>
+    <div class="logo-sub">AKG MASTERING EDITION · DUBE HOME RECORDS</div>
+  </div>
+  <div class="header-badge">44.1kHz</div>
+</header>
+
+<main>
+
+  <!-- UPLOAD -->
+  <div class="card">
+    <div class="card-title">01 — Audio Source</div>
+
+    <div class="upload-zone" id="uploadZone">
+      <input type="file" id="fileInput" accept=".wav,.mp3,audio/wav,audio/mpeg,audio/mp3" />
+      <span class="upload-icon">🎵</span>
+      <span class="upload-label">DROP WAV / MP3 HERE</span>
+      <span class="upload-hint">or tap to browse · 44.1kHz recommended</span>
+    </div>
+
+    <div class="file-info" id="fileInfo" style="margin-top:10px;">
+      <span class="file-icon">🎧</span>
+      <div class="file-details">
+        <div class="file-name" id="fileName">—</div>
+        <div class="file-meta" id="fileMeta">—</div>
+      </div>
+      <button class="file-clear" id="fileClear" title="Remove file">✕</button>
+    </div>
+  </div>
+
+  <!-- WAVEFORM -->
+  <div class="card">
+    <div class="card-title">02 — Waveform</div>
+    <div class="waveform-wrap">
+      <canvas id="waveformCanvas"></canvas>
+      <div class="waveform-placeholder" id="waveformPlaceholder">LOAD A FILE TO SEE WAVEFORM</div>
+    </div>
+    <div class="playback-row">
+      <button class="btn-play" id="playBtn" disabled title="Play / Pause">▶</button>
+      <div class="progress-bar-wrap" id="progressWrap">
+        <div class="progress-bar-fill" id="progressFill"></div>
+      </div>
+      <div class="time-display" id="timeDisplay">0:00 / 0:00</div>
+    </div>
+  </div>
+
+  <!-- MASTERING CONTROLS -->
+  <div class="card">
+    <div class="card-title">03 — Mastering Controls</div>
+    <div class="controls-grid">
+      <div class="control-group">
+        <div class="control-label">Target Loudness</div>
+        <span class="control-value" id="lufsTargetVal">−14 LUFS</span>
+        <input type="range" id="lufsTarget" min="-18" max="-6" step="1" value="-14" />
+        <div style="display:flex;justify-content:space-between;margin-top:4px;">
+          <span style="font-size:9px;color:#555;font-family:'JetBrains Mono',monospace;">−18 Spotify</span>
+          <span style="font-size:9px;color:#555;font-family:'JetBrains Mono',monospace;">−6 Club</span>
+        </div>
+      </div>
+      <div class="control-group">
+        <div class="control-label">Compression Ratio</div>
+        <span class="control-value" id="compRatioVal">2 : 1</span>
+        <input type="range" id="compRatio" min="1.2" max="6" step="0.1" value="2" />
+        <div style="display:flex;justify-content:space-between;margin-top:4px;">
+          <span style="font-size:9px;color:#555;font-family:'JetBrains Mono',monospace;">1.2 Gentle</span>
+          <span style="font-size:9px;color:#555;font-family:'JetBrains Mono',monospace;">6 Hard</span>
+        </div>
+      </div>
+      <div class="control-group">
+        <div class="control-label">AKG Air Boost (10kHz)</div>
+        <span class="control-value" id="airBoostVal">+3 dB</span>
+        <input type="range" id="airBoost" min="0" max="8" step="0.5" value="3" />
+        <div style="display:flex;justify-content:space-between;margin-top:4px;">
+          <span style="font-size:9px;color:#555;font-family:'JetBrains Mono',monospace;">0 Off</span>
+          <span style="font-size:9px;color:#555;font-family:'JetBrains Mono',monospace;">+8 Bright</span>
+        </div>
+      </div>
+      <div class="control-group">
+        <div class="control-label">Mud Cut (300Hz)</div>
+        <span class="control-value" id="mudCutVal">−2 dB</span>
+        <input type="range" id="mudCut" min="-8" max="0" step="0.5" value="-2" />
+        <div style="display:flex;justify-content:space-between;margin-top:4px;">
+          <span style="font-size:9px;color:#555;font-family:'JetBrains Mono',monospace;">−8 Deep</span>
+          <span style="font-size:9px;color:#555;font-family:'JetBrains Mono',monospace;">0 Off</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROCESSING CHAIN -->
+  <div class="card">
+    <div class="card-title">04 — Processing Chain</div>
+    <div class="chain-steps">
+      <div class="chain-step" id="step-analyze"><span class="step-dot"></span>ANALYZE LUFS</div>
+      <div class="chain-step" id="step-eq"><span class="step-dot"></span>AKG EQ</div>
+      <div class="chain-step" id="step-comp"><span class="step-dot"></span>COMPRESSOR</div>
+      <div class="chain-step" id="step-gain"><span class="step-dot"></span>GAIN MATCH</div>
+      <div class="chain-step" id="step-limit"><span class="step-dot"></span>LIMITER</div>
+      <div class="chain-step" id="step-render"><span class="step-dot"></span>RENDER WAV</div>
+    </div>
+  </div>
+
+  <!-- MASTER BUTTON -->
+  <div class="card">
+    <div class="card-title">05 — Master</div>
+    <div class="master-btn-wrap">
+      <button id="masterBtn" disabled>
+        <span>MASTER</span>
+        <span class="master-btn-sub">AKG C2000B</span>
+      </button>
+      <div class="master-status" id="masterStatus">LOAD AN AUDIO FILE TO BEGIN</div>
+    </div>
+  </div>
+
+  <!-- METERS -->
+  <div class="card">
+    <div class="card-title">06 — Loudness Meters</div>
+    <div class="meters-row">
+      <div class="meter-box">
+        <div class="meter-label">Before</div>
+        <div class="lufs-display" id="lufsBeforeDisplay">—</div>
+        <div class="lufs-unit">LUFS Integrated</div>
+        <div class="vu-bar-wrap"><div class="vu-bar-fill before" id="vuBefore"></div></div>
+      </div>
+      <div class="meter-box">
+        <div class="meter-label">After</div>
+        <div class="lufs-display" id="lufsAfterDisplay">—</div>
+        <div class="lufs-unit">LUFS Integrated</div>
+        <div class="vu-bar-wrap"><div class="vu-bar-fill after" id="vuAfter"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- WAVEFORM COMPARE -->
+  <div class="card waveform-compare" id="waveformCompare">
+    <div class="card-title">07 — Before / After Waveform</div>
+    <div class="waveform-compare-label">ORIGINAL</div>
+    <div class="waveform-wrap" style="height:70px;">
+      <canvas id="waveformBefore"></canvas>
+    </div>
+    <div class="waveform-compare-label" style="margin-top:8px;"><span>MASTERED</span></div>
+    <div class="waveform-wrap" style="height:70px;">
+      <canvas id="waveformAfter"></canvas>
+    </div>
+  </div>
+
+  <!-- EXPORT -->
+  <div class="card export-section" id="exportSection">
+    <div class="card-title">08 — Export</div>
+    <div class="export-info">
+      <span class="export-info-icon">✅</span>
+      <div class="export-info-text">
+        <div class="export-info-title">MASTERING COMPLETE</div>
+        <div class="export-info-sub" id="exportMeta">Ready to download</div>
+      </div>
+    </div>
+    <a id="downloadBtn" href="#" download="DHR_Mastered.wav">
+      ⬇ DOWNLOAD MASTERED WAV
+    </a>
+  </div>
+
+</main>
+
+<footer>© DUBE HOME RECORDS · DHR MASTER v2.0 · AKG MASTERING EDITION</footer>
+
+<script>
+// ─────────────────────────────────────────────────────────────────
+// DHR MASTER v2.0 — AKG Mastering Edition
+// Web Audio API mastering chain: LUFS analysis → EQ → Comp → Gain → Limit → Render
+// ─────────────────────────────────────────────────────────────────
+
+let audioCtx = null;
+let sourceBuffer = null;    // original decoded AudioBuffer
+let masteredBuffer = null;  // processed AudioBuffer
+let playbackSource = null;
+let playbackStart = 0;
+let playbackOffset = 0;
+let isPlaying = false;
+let playingMastered = false;
+let animFrame = null;
+
+// ── DOM refs ──
+const fileInput    = document.getElementById('fileInput');
+const uploadZone   = document.getElementById('uploadZone');
+const fileInfo     = document.getElementById('fileInfo');
+const fileName     = document.getElementById('fileName');
+const fileMeta     = document.getElementById('fileMeta');
+const fileClear    = document.getElementById('fileClear');
+const waveCanvas   = document.getElementById('waveformCanvas');
+const wfPlaceholder= document.getElementById('waveformPlaceholder');
+const playBtn      = document.getElementById('playBtn');
+const progressFill = document.getElementById('progressFill');
+const progressWrap = document.getElementById('progressWrap');
+const timeDisplay  = document.getElementById('timeDisplay');
+const masterBtn    = document.getElementById('masterBtn');
+const masterStatus = document.getElementById('masterStatus');
+const exportSection= document.getElementById('exportSection');
+const downloadBtn  = document.getElementById('downloadBtn');
+const exportMeta   = document.getElementById('exportMeta');
+const wfCompare    = document.getElementById('waveformCompare');
+const wfBefore     = document.getElementById('waveformBefore');
+const wfAfter      = document.getElementById('waveformAfter');
+
+// Sliders
+const lufsTargetEl = document.getElementById('lufsTarget');
+const compRatioEl  = document.getElementById('compRatio');
+const airBoostEl   = document.getElementById('airBoost');
+const mudCutEl     = document.getElementById('mudCut');
+
+// Value displays
+lufsTargetEl.addEventListener('input', () => {
+  document.getElementById('lufsTargetVal').textContent = lufsTargetEl.value + ' LUFS';
+});
+compRatioEl.addEventListener('input', () => {
+  document.getElementById('compRatioVal').textContent = parseFloat(compRatioEl.value).toFixed(1) + ' : 1';
+});
+airBoostEl.addEventListener('input', () => {
+  document.getElementById('airBoostVal').textContent = '+' + airBoostEl.value + ' dB';
+});
+mudCutEl.addEventListener('input', () => {
+  document.getElementById('mudCutVal').textContent = mudCutEl.value + ' dB';
+});
+
+// ── Drag and drop ──
+uploadZone.addEventListener('dragover', e => { e.preventDefault(); uploadZone.classList.add('drag-over'); });
+uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('drag-over'));
+uploadZone.addEventListener('drop', e => {
+  e.preventDefault();
+  uploadZone.classList.remove('drag-over');
+  const f = e.dataTransfer.files[0];
+  if (f) handleFile(f);
+});
+fileInput.addEventListener('change', () => {
+  if (fileInput.files[0]) handleFile(fileInput.files[0]);
+});
+fileClear.addEventListener('click', clearFile);
+
+// ── File handling ──
+async function handleFile(file) {
+  if (!file.type.startsWith('audio/')) {
+    setStatus('UNSUPPORTED FILE TYPE', 'error');
+    return;
+  }
+
+  // Reset state
+  clearMastered();
+  stopPlayback();
+
+  fileName.textContent = file.name;
+  fileInfo.classList.add('visible');
+
+  setStatus('DECODING AUDIO...', 'active');
+
+  try {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)({ sampleRate: 44100 });
+    if (audioCtx.state === 'suspended') await audioCtx.resume();
+
+    const arrayBuf = await file.arrayBuffer();
+    sourceBuffer = await audioCtx.decodeAudioData(arrayBuf);
+
+    const dur = sourceBuffer.duration;
+    const sr  = sourceBuffer.sampleRate;
+    const ch  = sourceBuffer.numberOfChannels;
+    const mb  = (file.size / 1048576).toFixed(2);
+    fileMeta.textContent = `${formatTime(dur)} · ${sr}Hz · ${ch}ch · ${mb}MB`;
+
+    drawWaveform(waveCanvas, sourceBuffer, '#00A8FF');
+    wfPlaceholder.style.display = 'none';
+
+    playBtn.disabled = false;
+    masterBtn.disabled = false;
+    setStatus('READY — HIT MASTER TO PROCESS', '');
+
+    // Measure before LUFS
+    const beforeLufs = measureLUFS(sourceBuffer);
+    updateMeter('before', beforeLufs);
+
+  } catch (err) {
+    console.error(err);
+    setStatus('ERROR DECODING FILE: ' + err.message, 'error');
+  }
+}
+
+function clearFile() {
+  sourceBuffer = null;
+  clearMastered();
+  stopPlayback();
+  fileInfo.classList.remove('visible');
+  fileName.textContent = '—';
+  fileMeta.textContent = '—';
+  fileInput.value = '';
+  wfPlaceholder.style.display = '';
+  clearCanvas(waveCanvas);
+  playBtn.disabled = true;
+  masterBtn.disabled = true;
+  setStatus('LOAD AN AUDIO FILE TO BEGIN', '');
+  document.getElementById('lufsBeforeDisplay').textContent = '—';
+  document.getElementById('lufsBeforeDisplay').className = 'lufs-display';
+  document.getElementById('vuBefore').style.width = '0%';
+}
+
+function clearMastered() {
+  masteredBuffer = null;
+  exportSection.classList.remove('visible');
+  wfCompare.classList.remove('visible');
+  document.getElementById('lufsAfterDisplay').textContent = '—';
+  document.getElementById('lufsAfterDisplay').className = 'lufs-display';
+  document.getElementById('vuAfter').style.width = '0%';
+  resetChain();
+}
+
+// ── Waveform drawing ──
+function drawWaveform(canvas, buffer, color) {
+  const ctx = canvas.getContext('2d');
+  const W = canvas.parentElement.clientWidth;
+  const H = canvas.parentElement.clientHeight;
+  canvas.width = W;
+  canvas.height = H;
+
+  ctx.clearRect(0, 0, W, H);
+
+  const data = buffer.getChannelData(0);
+  const step = Math.ceil(data.length / W);
+  const mid  = H / 2;
+
+  ctx.fillStyle = color;
+  ctx.globalAlpha = 0.85;
+
+  for (let x = 0; x < W; x++) {
+    let min = 1, max = -1;
+    for (let j = 0; j < step; j++) {
+      const v = data[x * step + j] || 0;
+      if (v < min) min = v;
+      if (v > max) max = v;
+    }
+    const y1 = (1 + min) * mid;
+    const y2 = (1 + max) * mid;
+    ctx.fillRect(x, y1, 1, Math.max(1, y2 - y1));
+  }
+  ctx.globalAlpha = 1;
+}
+
+function clearCanvas(canvas) {
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+}
+
+// ── LUFS measurement (ITU-R BS.1770-4 simplified) ──
+function measureLUFS(buffer) {
+  const sr = buffer.sampleRate;
+  const ch = buffer.numberOfChannels;
+  const len = buffer.length;
+
+  // K-weighting: pre-filter (high-shelf +4dB at ~1.5kHz) + high-pass
+  // Simplified: compute mean square with K-weighting approximation
+  let sumSquares = 0;
+  for (let c = 0; c < Math.min(ch, 2); c++) {
+    const data = buffer.getChannelData(c);
+    // Simple K-weighting: boost highs slightly (approximation)
+    let prev = 0;
+    for (let i = 0; i < len; i++) {
+      // High-shelf approximation: y[n] = x[n] + 0.17*(x[n]-x[n-1])
+      const y = data[i] + 0.17 * (data[i] - prev);
+      prev = data[i];
+      sumSquares += y * y;
+    }
+  }
+  const meanSquare = sumSquares / (len * Math.min(ch, 2));
+  if (meanSquare < 1e-10) return -70;
+  return -0.691 + 10 * Math.log10(meanSquare);
+}
+
+function updateMeter(which, lufs) {
+  const display = document.getElementById(`lufs${which.charAt(0).toUpperCase() + which.slice(1)}Display`);
+  const bar     = document.getElementById(`vu${which.charAt(0).toUpperCase() + which.slice(1)}`);
+
+  display.textContent = lufs > -70 ? lufs.toFixed(1) : '—';
+  display.className = 'lufs-display' + (lufs > -70 ? (lufs >= -16 ? ' good' : ' measured') : '');
+
+  // Map -40 to 0 LUFS → 0% to 100%
+  const pct = Math.max(0, Math.min(100, ((lufs + 40) / 40) * 100));
+  bar.style.width = pct + '%';
+}
+
+// ── Processing chain steps ──
+const STEPS = ['analyze','eq','comp','gain','limit','render'];
+
+function resetChain() {
+  STEPS.forEach(s => {
+    const el = document.getElementById('step-' + s);
+    el.classList.remove('active','done');
+  });
+}
+
+async function setStep(name, state) {
+  STEPS.forEach(s => {
+    const el = document.getElementById('step-' + s);
+    if (s === name) {
+      el.classList.toggle('active', state === 'active');
+      el.classList.toggle('done', state === 'done');
+    }
+  });
+  await sleep(120);
+}
+
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+// ── MASTER processing ──
+masterBtn.addEventListener('click', async () => {
+  if (!sourceBuffer) return;
+  if (audioCtx.state === 'suspended') await audioCtx.resume();
+
+  stopPlayback();
+  masterBtn.disabled = true;
+  masterBtn.classList.add('processing');
+  clearMastered();
+
+  const targetLUFS = parseFloat(lufsTargetEl.value);
+  const ratio      = parseFloat(compRatioEl.value);
+  const airGain    = parseFloat(airBoostEl.value);
+  const mudGain    = parseFloat(mudCutEl.value);
+
+  try {
+    // STEP 1: Analyze
+    setStatus('ANALYZING LOUDNESS...', 'active');
+    await setStep('analyze', 'active');
+    const beforeLufs = measureLUFS(sourceBuffer);
+    updateMeter('before', beforeLufs);
+    await sleep(300);
+    await setStep('analyze', 'done');
+
+    // STEP 2: EQ (offline context)
+    setStatus('APPLYING AKG EQ...', 'active');
+    await setStep('eq', 'active');
+    const sr = sourceBuffer.sampleRate;
+    const len = sourceBuffer.length;
+    const nCh = sourceBuffer.numberOfChannels;
+
+    // Build offline context for EQ + compression
+    const offCtx = new OfflineAudioContext(nCh, len, sr);
+    const src = offCtx.createBufferSource();
+    src.buffer = sourceBuffer;
+
+    // EQ: High shelf +airGain dB at 10kHz
+    const hiShelf = offCtx.createBiquadFilter();
+    hiShelf.type = 'highshelf';
+    hiShelf.frequency.value = 10000;
+    hiShelf.gain.value = airGain;
+
+    // EQ: Low shelf / peaking cut at 300Hz
+    const mudPeak = offCtx.createBiquadFilter();
+    mudPeak.type = 'peaking';
+    mudPeak.frequency.value = 300;
+    mudPeak.Q.value = 0.8;
+    mudPeak.gain.value = mudGain;
+
+    // High-pass at 30Hz (remove sub rumble)
+    const hp = offCtx.createBiquadFilter();
+    hp.type = 'highpass';
+    hp.frequency.value = 30;
+    hp.Q.value = 0.7;
+
+    src.connect(hp);
+    hp.connect(mudPeak);
+    mudPeak.connect(hiShelf);
+    await setStep('eq', 'done');
+
+    // STEP 3: Compressor
+    setStatus('COMPRESSING...', 'active');
+    await setStep('comp', 'active');
+
+    const comp = offCtx.createDynamicsCompressor();
+    comp.threshold.value = -24;
+    comp.knee.value = 6;
+    comp.ratio.value = ratio;
+    comp.attack.value = 0.003;
+    comp.release.value = 0.25;
+
+    hiShelf.connect(comp);
+    await setStep('comp', 'done');
+
+    // STEP 4: Gain match to target LUFS
+    setStatus('MATCHING LOUDNESS TO ' + targetLUFS + ' LUFS...', 'active');
+    await setStep('gain', 'active');
+
+    const gainNode = offCtx.createGain();
+    const gainDb = targetLUFS - beforeLufs;
+    // Clamp to reasonable range
+    const gainLinear = Math.pow(10, Math.min(gainDb, 18) / 20);
+    gainNode.gain.value = gainLinear;
+
+    comp.connect(gainNode);
+    await setStep('gain', 'done');
+
+    // STEP 5: Limiter (brickwall at -0.3 dBFS)
+    setStatus('APPLYING LIMITER...', 'active');
+    await setStep('limit', 'active');
+
+    const limiter = offCtx.createDynamicsCompressor();
+    limiter.threshold.value = -0.3;
+    limiter.knee.value = 0;
+    limiter.ratio.value = 20;
+    limiter.attack.value = 0.001;
+    limiter.release.value = 0.1;
+
+    gainNode.connect(limiter);
+    limiter.connect(offCtx.destination);
+    src.start(0);
+    await setStep('limit', 'done');
+
+    // STEP 6: Render
+    setStatus('RENDERING WAV...', 'active');
+    await setStep('render', 'active');
+
+    masteredBuffer = await offCtx.startRendering();
+    await setStep('render', 'done');
+
+    // Measure after LUFS
+    const afterLufs = measureLUFS(masteredBuffer);
+    updateMeter('after', afterLufs);
+
+    // Draw compare waveforms
+    drawWaveform(wfBefore, sourceBuffer, '#005580');
+    drawWaveform(wfAfter, masteredBuffer, '#00A8FF');
+    wfCompare.classList.add('visible');
+
+    // Build WAV blob
+    const wavBlob = audioBufferToWav(masteredBuffer);
+    const url = URL.createObjectURL(wavBlob);
+    const origName = fileName.textContent.replace(/\.[^.]+$/, '');
+    downloadBtn.href = url;
+    downloadBtn.download = `DHR_Mastered_${origName}.wav`;
+
+    const sizeMB = (wavBlob.size / 1048576).toFixed(2);
+    exportMeta.textContent = `${formatTime(masteredBuffer.duration)} · 44.1kHz · ${masteredBuffer.numberOfChannels}ch · ${sizeMB}MB WAV`;
+    exportSection.classList.add('visible');
+
+    setStatus('MASTERING COMPLETE ✓', 'done');
+    masterBtn.classList.remove('processing');
+    masterBtn.disabled = false;
+
+    // Scroll to export
+    setTimeout(() => exportSection.scrollIntoView({ behavior: 'smooth', block: 'center' }), 200);
+
+  } catch (err) {
+    console.error(err);
+    setStatus('ERROR: ' + err.message, 'error');
+    masterBtn.classList.remove('processing');
+    masterBtn.disabled = false;
+    resetChain();
+  }
+});
+
+// ── Playback ──
+playBtn.addEventListener('click', () => {
+  if (!sourceBuffer && !masteredBuffer) return;
+  if (audioCtx.state === 'suspended') audioCtx.resume();
+  if (isPlaying) {
+    stopPlayback();
+  } else {
+    startPlayback(masteredBuffer || sourceBuffer);
+  }
+});
+
+progressWrap.addEventListener('click', e => {
+  const buf = masteredBuffer || sourceBuffer;
+  if (!buf) return;
+  const rect = progressWrap.getBoundingClientRect();
+  const pct = (e.clientX - rect.left) / rect.width;
+  playbackOffset = pct * buf.duration;
+  if (isPlaying) {
+    stopPlayback();
+    startPlayback(buf);
+  } else {
+    updateTimeDisplay(buf);
+  }
+});
+
+function startPlayback(buf) {
+  if (!buf) return;
+  if (audioCtx.state === 'suspended') audioCtx.resume();
+  playbackSource = audioCtx.createBufferSource();
+  playbackSource.buffer = buf;
+  playbackSource.connect(audioCtx.destination);
+  playbackSource.start(0, playbackOffset);
+  playbackStart = audioCtx.currentTime - playbackOffset;
+  isPlaying = true;
+  playBtn.textContent = '⏸';
+  playbackSource.onended = () => {
+    if (isPlaying) {
+      isPlaying = false;
+      playbackOffset = 0;
+      playBtn.textContent = '▶';
+      progressFill.style.width = '0%';
+      cancelAnimationFrame(animFrame);
+    }
+  };
+  tickPlayback(buf);
+}
+
+function stopPlayback() {
+  if (playbackSource) {
+    try { playbackSource.stop(); } catch(e) {}
+    playbackSource = null;
+  }
+  if (isPlaying) {
+    const buf = masteredBuffer || sourceBuffer;
+    if (buf) playbackOffset = Math.min(audioCtx.currentTime - playbackStart, buf.duration);
+  }
+  isPlaying = false;
+  playBtn.textContent = '▶';
+  cancelAnimationFrame(animFrame);
+}
+
+function tickPlayback(buf) {
+  animFrame = requestAnimationFrame(() => {
+    if (!isPlaying) return;
+    const elapsed = audioCtx.currentTime - playbackStart;
+    const pct = Math.min(1, elapsed / buf.duration) * 100;
+    progressFill.style.width = pct + '%';
+    timeDisplay.textContent = formatTime(elapsed) + ' / ' + formatTime(buf.duration);
+    tickPlayback(buf);
+  });
+}
+
+function updateTimeDisplay(buf) {
+  timeDisplay.textContent = formatTime(playbackOffset) + ' / ' + formatTime(buf.duration);
+  progressFill.style.width = (playbackOffset / buf.duration * 100) + '%';
+}
+
+// ── Helpers ──
+function setStatus(msg, cls) {
+  masterStatus.textContent = msg;
+  masterStatus.className = 'master-status' + (cls ? ' ' + cls : '');
+}
+
+function formatTime(s) {
+  const m = Math.floor(s / 60);
+  const sec = Math.floor(s % 60);
+  return m + ':' + String(sec).padStart(2, '0');
+}
+
+// ── WAV encoder ──
+function audioBufferToWav(buffer) {
+  const nCh   = buffer.numberOfChannels;
+  const sr    = buffer.sampleRate;
+  const len   = buffer.length;
+  const bitsPerSample = 16;
+  const byteRate = sr * nCh * bitsPerSample / 8;
+  const blockAlign = nCh * bitsPerSample / 8;
+  const dataSize = len * nCh * bitsPerSample / 8;
+  const wavBuf = new ArrayBuffer(44 + dataSize);
+  const view   = new DataView(wavBuf);
+
+  function writeStr(off, str) {
+    for (let i = 0; i < str.length; i++) view.setUint8(off + i, str.charCodeAt(i));
+  }
+
+  writeStr(0, 'RIFF');
+  view.setUint32(4, 36 + dataSize, true);
+  writeStr(8, 'WAVE');
+  writeStr(12, 'fmt ');
+  view.setUint32(16, 16, true);
+  view.setUint16(20, 1, true);         // PCM
+  view.setUint16(22, nCh, true);
+  view.setUint32(24, sr, true);
+  view.setUint32(28, byteRate, true);
+  view.setUint16(32, blockAlign, true);
+  view.setUint16(34, bitsPerSample, true);
+  writeStr(36, 'data');
+  view.setUint32(40, dataSize, true);
+
+  // Interleave channels
+  let offset = 44;
+  for (let i = 0; i < len; i++) {
+    for (let c = 0; c < nCh; c++) {
+      const sample = Math.max(-1, Math.min(1, buffer.getChannelData(c)[i]));
+      view.setInt16(offset, sample < 0 ? sample * 32768 : sample * 32767, true);
+      offset += 2;
+    }
+  }
+
+  return new Blob([wavBuf], { type: 'audio/wav' });
+}
+
+// ── Resize waveform on window resize ──
+window.addEventListener('resize', () => {
+  if (sourceBuffer) drawWaveform(waveCanvas, sourceBuffer, '#00A8FF');
+  if (masteredBuffer) {
+    drawWaveform(wfBefore, sourceBuffer, '#005580');
+    drawWaveform(wfAfter, masteredBuffer, '#00A8FF');
+  }
+});
+</script>
+</body>
+</html>
